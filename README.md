@@ -36,26 +36,26 @@ A Unix-friendly command-line wrapper for Apple's Foundation Models framework, de
 
 ## Quick Start (Pre-built Binary)
 
-> **Architecture note:** The pre-built binary in `bin/osx-ai-inloop` is compiled for **Apple Silicon (arm64)** only. It will not run on Intel Macs. If you're on an Intel Mac, follow the [Build from Source](#build-from-source) instructions below.
+> **Architecture note:** The pre-built binary is compiled for **Apple Silicon (arm64)** only. It will not run on Intel Macs. If you're on an Intel Mac, follow the [Build from Source](#build-from-source) instructions below.
 
 If you're on an Apple Silicon Mac running macOS 26+ with Apple Intelligence enabled, you can skip the build step entirely:
 
 ```bash
-git clone https://github.com/inloopstudio-team/apple-intelligence-inloop.git
-cd apple-intelligence-inloop
+# Download the binary
+wget -O osx-ai-inloop https://github.com/inloopstudio-team/apple-intelligence-inloop/raw/refs/heads/main/bin/osx-ai-inloop-arm64
 
 # Make executable and run an environment check
-chmod +x bin/osx-ai-inloop-arm64
-./bin/osx-ai-inloop-arm64 check
+chmod +x osx-ai-inloop
+./osx-ai-inloop check
 
 # Try it
-echo '{"prompt":"Explain Swift async/await in one sentence"}' | ./bin/osx-ai-inloop-arm64
+echo '{"prompt":"Explain Swift async/await in one sentence"}' | ./osx-ai-inloop
 ```
 
-To use it from anywhere, copy it to your PATH:
+To use it from anywhere, move it to your PATH:
 
 ```bash
-cp bin/osx-ai-inloop-arm64 /usr/local/bin/osx-ai-inloop
+mv osx-ai-inloop /usr/local/bin/osx-ai-inloop
 osx-ai-inloop check
 ```
 
