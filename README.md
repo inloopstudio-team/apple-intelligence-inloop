@@ -24,16 +24,44 @@ A Unix-friendly command-line wrapper for Apple's Foundation Models framework, de
 
 | Requirement | Details |
 |---|---|
-| **macOS** | 26.0 or later (Tahoe / macOS 26 Beta) |
+| **macOS** | 26.0 or later (Tahoe) |
 | **Hardware** | Apple Silicon (M-series chip required) |
 | **Apple Intelligence** | Enabled in System Settings > Apple Intelligence & Siri |
-| **Xcode** | 26.0 or later (for building from source) |
+| **Xcode** | 26.0 or later — **must build with Xcode 26** |
+| **Swift** | 6.1 or later (included with Xcode 26) |
+
+> **Why Xcode 26?** `FoundationModels` is a system framework that ships with the macOS 26 SDK inside Xcode 26. Building with any earlier Xcode/SDK means `canImport(FoundationModels)` evaluates to `false` at compile time and the binary silently falls back to a stub that always returns `UNSUPPORTED_ENVIRONMENT`. There is no Swift package to add — the framework is part of the OS and SDK.
 
 ---
 
 ## Installation
 
-### Build from Source
+### 1. Install Xcode 26
+
+Download **Xcode 26** (or later) from the [Apple Developer portal](https://developer.apple.com/xcode/) or via the Mac App Store. Xcode 16 and earlier will **not** produce a working binary.
+
+Verify you are using the correct toolchain:
+
+```bash
+xcodebuild -version
+# Xcode 26.x
+# Build version ...
+
+xcrun --sdk macosx --show-sdk-version
+# 26.0
+```
+
+If you have multiple Xcode versions installed, select Xcode 26 with:
+
+```bash
+sudo xcode-select -s /Applications/Xcode-26.app/Contents/Developer
+```
+
+### 2. Enable Apple Intelligence
+
+Open **System Settings > Apple Intelligence & Siri** and make sure Apple Intelligence is turned on and the model has finished downloading.
+
+### 3. Build from Source
 
 ```bash
 git clone https://github.com/inloopstudio-team/apple-intelligence-inloop.git
@@ -42,14 +70,14 @@ swift build -c release
 cp .build/release/osx-ai-inloop /usr/local/bin/osx-ai-inloop
 ```
 
-### Verify Installation
+### 4. Verify Installation
 
 ```bash
 osx-ai-inloop version
 # osx-ai-inloop 0.1.0
 
 osx-ai-inloop check
-# Runs environment compatibility checks
+# All checks should show ✓ before using generate
 ```
 
 ---
@@ -432,4 +460,4 @@ MIT — see [LICENSE](LICENSE).
 
 ## Author
 
-**Abhishek Parolkar** — [abhishek@parolkar.com](mailto:abhishek@parolkar.com)
+**Abhishek Parolkar**
