@@ -1,18 +1,16 @@
-// main.swift
+// EntryPoint.swift
 // Entry point for the osx-ai-inloop CLI.
 // Apple Intelligence Inloop — Unix-friendly wrapper for Apple's Foundation Models.
 
 import ArgumentParser
 import Foundation
 
-// Configure signal handling before launching the CLI.
-// Ignoring SIGPIPE prevents crashes when piped to consumers that close early.
-configureSIGPIPE()
-
 // MARK: - Root Command
 
-// Root command — ArgumentParser dispatches to subcommands based on the first CLI argument.
-// AsyncParsableCommand enables async run() methods in subcommands.
+/// Root command — ArgumentParser dispatches to subcommands based on the first CLI argument.
+/// The @main attribute makes this the entry point. AsyncParsableCommand enables
+/// async run() methods in subcommands (needed for FoundationModels calls).
+@main
 struct OsxAiInloop: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "osx-ai-inloop",
@@ -41,6 +39,22 @@ struct OsxAiInloop: AsyncParsableCommand {
         ],
         defaultSubcommand: GenerateCommand.self
     )
+
+    // Configure SIGPIPE handling at startup.
+    static func main() async {
+        configureSIGPIPE()
+        // Delegate to ArgumentParser's async dispatch.
+        do {
+            var command = try parseAsRoot()
+            if var asyncCommand = command as? AsyncParsableCommand {
+                try await asyncCommand.run()
+            } else {
+                try command.run()
+            }
+        } catch {
+            exit(withError: error)
+        }
+    }
 }
 
 // MARK: - Version Constants
@@ -52,7 +66,3 @@ enum AppVersion {
     static let minor = 1
     static let patch = 0
 }
-
-// MARK: - Launch
-
-OsxAiInloop.main()

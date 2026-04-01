@@ -4,7 +4,7 @@
 import ArgumentParser
 import Foundation
 
-struct VersionCommand: AsyncParsableCommand {
+struct VersionCommand: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "version",
         abstract: "Print the version number of osx-ai-inloop."
@@ -13,7 +13,7 @@ struct VersionCommand: AsyncParsableCommand {
     @Flag(name: .long, help: "Output version as JSON.")
     var json: Bool = false
 
-    func run() async throws {
+    mutating func run() throws {
         if json {
             struct VersionOutput: Encodable {
                 let version: String
